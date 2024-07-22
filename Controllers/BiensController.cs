@@ -29,7 +29,21 @@ namespace Assurance_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Bien>>> GetBiens()
         {
-            var ListeBiens= await _context.Biens.ToListAsync();
+            var ListeBiens= await _context.Biens
+                .Include(b=>b.TypeBien)
+                .Include(b=>b.Structure)
+                .Select(b=>new BienDto
+                {
+                    Id=b.Id,
+                    Code=b.Code,
+                    DaeAcquisation=b.DaeAcquisation,
+                    TypeBienId=b.TypeBienId,
+                    LibelleTypeBien=b.TypeBien.Libelle,
+                    StructureId=b.StructureId,
+                    LibelleStructure=b.Structure.Libelle
+                })
+                .ToListAsync();
+            
             return Ok(_mapper.Map<List<BienDto>>(ListeBiens));
         }
 

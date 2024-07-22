@@ -8,5 +8,6 @@
         public string Nom { get; set; }
         public DateTime DateNaissance { get; set; }
         public int StructureId { get; set; }
+        public string? LibelleStructure {  get; set; }
     }
 }

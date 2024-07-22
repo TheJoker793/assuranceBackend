@@ -252,3 +252,4 @@ C:\Users\Salah\Source\Repos\Assurance_Backend\Assurance_Backend\bin\Debug\net8.0
 C:\Users\Salah\Source\Repos\Assurance_Backend\Assurance_Backend\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Drawing.Common.dll
 C:\Users\Salah\Source\Repos\Assurance_Backend\Assurance_Backend\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Salah\Source\Repos\Assurance_Backend\Assurance_Backend\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
+C:\Users\Salah\Source\Repos\Assurance_Backend\Assurance_Backend\obj\Debug\net8.0\Assurance_Backend.sourcelink.json

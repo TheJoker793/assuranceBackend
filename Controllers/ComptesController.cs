@@ -29,7 +29,23 @@ namespace Assurance_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Compte>>> GetComptes()
         {
-            var AllAccounts= await _context.Comptes.ToListAsync();
+            var AllAccounts= await _context.Comptes
+                .Include(c=>c.Personne)
+                .Select(c=>new CompteDto
+                {
+                    Id=c.Id,
+                    Numero=c.Numero,
+                    Email=c.Email,
+                    Login=c.Login,
+                    Password=c.Password,
+                    PersonneId=c.PersonneId,
+                    CinPersonne=c.Personne.Cin,
+                    PrenomPersonne=c.Personne.Prenom,
+                    NomPersonne=c.Personne.Nom,
+                    DateNaissancePersonne=c.Personne.DateNaissance
+                })
+                .ToListAsync();
+            
             return Ok(_mapper.Map<List<CompteDto>>(AllAccounts));
         }
 
