@@ -29,7 +29,29 @@ namespace Assurance_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SinistreItem>>> GetSinistreItems()
         {
-            var allItems= await _context.SinistreItems.ToListAsync();
+            var allItems= await _context.SinistreItems
+                .Include(si=>si.SinistreItemNature)
+                .Include(si=>si.Bien)
+                .Include(si=>si.Article)
+                .Select(si=>new SinistreItemDto
+                {
+                    Id=si.Id,
+                    DateAjout=si.DateAjout,
+                    Description=si.Description,
+                    Quantite=si.Quantite,
+                    Prix=si.Prix,
+                    SinistreItemNatureId=si.SinistreItemNatureId,
+                    LibelleSinistreItemNature=si.SinistreItemNature.Libelle,
+                    ArticleId=si.ArticleId,
+                    LibelleArticle=si.Article.Libelle,
+                    ReferenceArticle=si.Article.Reference,
+                    PrixArticle=si.Article.Prix,
+                    BienId=si.BienId,
+                    CodeBien=si.Bien.Code,
+
+                })
+                .ToListAsync();
+            
             return Ok(_mapper.Map<List<SinistreItemDto>>(allItems));
         }
 

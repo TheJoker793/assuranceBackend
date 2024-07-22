@@ -43,8 +43,8 @@ namespace Assurance_Backend.Controllers
             {
                 return NotFound();
             }
-
-            return compteBancaire;
+            var compteBancaireDto = _mapper.Map<CompteBancaireDto>(compteBancaire);
+            return Ok(compteBancaireDto);
         }
 
         // PUT: api/CompteBancaires/5

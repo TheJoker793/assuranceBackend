@@ -28,7 +28,24 @@ namespace Assurance_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Contrat>>> GetContrats()
         {
-            var AllContrats= await _context.Contrats.ToListAsync();
+            var AllContrats= await _context.Contrats
+                .Include(c=>c.NatureContrat)
+                .Include(c=>c.QuittancePrime)
+                .Select(c=>new ContratDto
+                {
+                    Id=c.Id,
+                    DateEffet=c.DateEffet,
+                    DateSignature=c.DateSignature,
+                    DateEcheance=c.DateEcheance,
+                    Exercice=c.Exercice,
+                    NatureContratId=c.NatureContratId,
+                    LibelleNatureContrat=c.NatureContrat.Libelle,
+                    QuittancePrimeId=c.QuittancePrimeId,
+                    LibelleQuittancePrime=c.QuittancePrime.Libelle,
+                    MontantQuittancePrime=c.QuittancePrime.Montant,
+                    DateAjoutQuittancePrime=c.QuittancePrime.DateAjout
+                })
+                .ToListAsync();
             return Ok(_mapper.Map<List<CompteDto>>(AllContrats));
         }
 
@@ -42,8 +59,8 @@ namespace Assurance_Backend.Controllers
             {
                 return NotFound();
             }
-
-            return contrat;
+            var contratDto = _mapper.Map<ContratDto>(contrat);
+            return Ok(contratDto);
         }
 
         // PUT: api/Contrats/5

@@ -29,7 +29,30 @@ namespace Assurance_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Quittance>>> GetQuittances()
         {
-            var AllQuittances= await _context.Quittances.ToListAsync();
+            var AllQuittances= await _context.Quittances
+                .Include(q=>q.Devis)
+                .Include(q=>q.DossierSinistre)
+                .Include(q=>q.Assureur)
+                .Select(q=>new QuittanceDto
+                {
+                    Id=q.Id,
+                    Libelle=q.Libelle,
+                    Montant=q.Montant,
+                    DateAjout=q.DateAjout,
+                    DateSignature=q.DateSignature,
+                    DevisId=q.DevisId,
+                    LibelleDevis=q.Devis.Libelle,
+                    DossierSinistreId=q.DossierSinistreId,
+                    DateAjoutDossierSinistre=q.DossierSinistre.DateAjout,
+                    MontantAssuranceDossierSinistre=q.DossierSinistre.MontantAssurance,
+                    MontantSinistreDossierSinistre=q.DossierSinistre.MontantSinistre,
+                    ObservationDossierSinistre=q.DossierSinistre.Observation,
+                    AssureurId=q.AssureurId,
+                    DesignationAssureur=q.Assureur.Designation,
+                    AddressAssureur=q.Assureur.Address
+
+                })
+                .ToListAsync();
             return Ok(_mapper.Map<List<QuittanceDto>>(AllQuittances));
         }
 
@@ -43,8 +66,8 @@ namespace Assurance_Backend.Controllers
             {
                 return NotFound();
             }
-
-            return quittance;
+            var quittanceDto = _mapper.Map<QuittanceDto>(quittance);
+            return Ok(quittanceDto);
         }
 
         // PUT: api/Quittances/5

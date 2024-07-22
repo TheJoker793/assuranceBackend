@@ -29,7 +29,40 @@ namespace Assurance_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DossierSinistre>>> GetDossierSinistres()
         {
-            var AllDossiersSinistres= await _context.DossierSinistres.ToListAsync();
+            var AllDossiersSinistres= await _context.DossierSinistres
+                .Include(ds=>ds.Dossier)
+                .Include(ds=>ds.Sinistre)
+                .Select(ds=>new DossierSinistreDto
+                {
+                    Id=ds.Id,
+                    DateAjout=ds.DateAjout,
+                    MontantAssurance=ds.MontantAssurance,
+                    MontantSinistre=ds.MontantSinistre,
+                    Observation=ds.Observation,
+                    SinistreId=ds.SinistreId,
+                    LibelleSinistre=ds.Sinistre.Libelle,
+                    ReferenceSinistre=ds.Sinistre.Reference,
+                    DescriptionSinistre=ds.Sinistre.Description,
+                    MontantExpertiseSinistre=ds.Sinistre.MontantExpertise,
+                    MontantIndemniserSinistre=ds.Sinistre.MontantIndemniser,
+                    DateSinistre=ds.Sinistre.DateSinistre,
+                    DateAjoutSinistre=ds.Sinistre.DateAjout,
+                    DegatMaterielSinistre=ds.Sinistre.DegatMateriel,
+                    CauseSinistre=ds.Sinistre.Cause,
+                    LieuSinistre=ds.Sinistre.Lieux,
+                    ObjetSinistre=ds.Sinistre.Objet,
+                    DateValidationSinistre=ds.Sinistre.DateValidation,
+                    DossierId=ds.DossierId,
+                    LibelleDossier=ds.Dossier.Libelle,
+                    ReferenceDossiser=ds.Dossier.Reference,
+                    DateDeclarationDossiser=ds.Dossier.DateDeclaration,
+                    MotifDossier=ds.Dossier.Motif,
+                    DateAjoutDossier=ds.Dossier.DateAjout,
+                    MontantExpertiseDossier=ds.Dossier.MontantExpertise,
+                    MontantIdemniserDossier=ds.Dossier.MontantIdemniser
+
+                })
+                .ToListAsync();
             return Ok(_mapper.Map<List<DossierSinistreDto>>(AllDossiersSinistres));
         }
 
@@ -43,8 +76,9 @@ namespace Assurance_Backend.Controllers
             {
                 return NotFound();
             }
+            var DossierSinistreDto = _mapper.Map<DossierSinistreDto>(dossierSinistre);
 
-            return dossierSinistre;
+            return Ok(DossierSinistreDto);
         }
 
         // PUT: api/DossierSinistres/5

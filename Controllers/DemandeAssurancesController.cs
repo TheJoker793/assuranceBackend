@@ -29,7 +29,30 @@ namespace Assurance_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DemandeAssurance>>> GetDemandeAssurances()
         {
-            var AllDemandes=await _context.DemandeAssurances.ToListAsync();
+            var AllDemandes=await _context.DemandeAssurances
+                .Include(da=>da.DemandeType)
+                .Include(da=>da.QuittancePrime)
+                .Include(da=>da.Personne)
+                .Select(da=>new DemandeAssuranceDto
+                {
+                    Id=da.Id,
+                    Reference=da.Reference,
+                    DateDemande=da.DateDemande,
+                    DateEffet=da.DateEffet,
+                    DemandeTypeId=da.DemandeTypeId,
+                    LibelleDemandeType=da.DemandeType.Libelle,
+                    QuittancePrimeId=da.QuittancePrimeId,
+                    LibelleQuittancePrime=da.QuittancePrime.Libelle,
+                    MontantQuittancePrime=da.QuittancePrime.Montant,
+                    DateAjoutQuittancePrime=da.QuittancePrime.DateAjout,
+                    PersonneId=da.PersonneId,
+                    Cin=da.Personne.Cin,
+                    PrenomPersonne=da.Personne.Prenom,
+                    NomPersonne=da.Personne.Nom,
+                    DateNAissancePersonne=da.Personne.DateNaissance
+
+                })
+                .ToListAsync();
             return Ok(_mapper.Map<List<DemandeAssuranceDto>>(AllDemandes));
         }
 
@@ -43,8 +66,8 @@ namespace Assurance_Backend.Controllers
             {
                 return NotFound();
             }
-
-            return demandeAssurance;
+            var DemandeAssuranceDto = _mapper.Map<DemandeAssuranceDto>(demandeAssurance);
+            return Ok (DemandeAssuranceDto);
         }
 
         // PUT: api/DemandeAssurances/5

@@ -6,5 +6,6 @@
         public string code { get; set; }
         public string Nature { get; set; }
         public int TypeTransportId { get; set; }
+        public string? LibelleTypeTransport {  get; set; }
     }
 }

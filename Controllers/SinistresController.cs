@@ -29,7 +29,36 @@ namespace Assurance_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Sinistre>>> GetSinistres()
         {
-            var AllSinistres= await _context.Sinistres.ToListAsync();
+            var AllSinistres= await _context.Sinistres
+                .Include(s=>s.TypeSinistre)
+                .Include(s=>s.Personne)
+                .Include(s=>s.Situation)
+                .Select(s=>new SinistreDto
+                {
+                    Id=s.Id,
+                    Libelle=s.Libelle,
+                    Reference=s.Reference,
+                    Description=s.Description,
+                    MontantExpertise=s.MontantExpertise,
+                    MontantIndemniser=s.MontantIndemniser,
+                    DateSinistre=s.DateSinistre,
+                    DateAjout=s.DateAjout,
+                    DegatMateriel=s.DegatMateriel,
+                    Cause=s.Cause,
+                    Lieux=s.Lieux,
+                    Objet=s.Objet,
+                    DateValidation=s.DateValidation,
+                    TypeSinistreId=s.TypeSinistreId,
+                    LibelleTypeSinistre=s.TypeSinistre.Libelle,
+                    SituationId=s.SituationId,
+                    LibelleSituation=s.Libelle,
+                    PersonneId=s.PersonneId,
+                    CinPersonne=s.Personne.Cin,
+                    PrenomPersonne=s.Personne.Prenom,
+                    NomPersonne=s.Personne.Nom,
+                    DateNaissancePersonne=s.Personne.DateNaissance
+                })
+                .ToListAsync();
             return Ok(_mapper.Map<List<SinistreDto>>(AllSinistres));
         }
 
@@ -43,8 +72,8 @@ namespace Assurance_Backend.Controllers
             {
                 return NotFound();
             }
-
-            return sinistre;
+            var SinistreDto=_mapper.Map<SinistreDto>(sinistre);
+            return Ok(SinistreDto);
         }
 
         // PUT: api/Sinistres/5

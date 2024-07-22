@@ -29,7 +29,35 @@ namespace Assurance_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DemandeItem>>> GetDemandeItems()
         {
-            return await _context.DemandeItems.ToListAsync();
+            var allDemandsItem=await _context.DemandeItems
+                .Include(di => di.Bien)
+                .Include(di => di.Marchandise)
+                .Select(di => new DemandeItemDto 
+                {
+                    Id = di.Id,
+                    DateEffet = di.DateEffet,
+                    Origine = di.Origine,
+                    Destination = di.Destination,
+                    DateExpedition = di.DateExpedition,
+                    NomNavire = di.NomNavire,
+                    NomChauffeur = di.NomChauffeur,
+                    NomCompanie = di.NomCompanie,
+                    Matricule = di.Matricule,
+                    IdZone = di.IdZone,
+                    BienId = di.BienId,
+                    CodeBien=di.Bien.Code,
+                    DateAquisationBien=di.Bien.DaeAcquisation,
+                    MarchandseId = di.MarchandseId,
+                    CodeMarchandise=di.Marchandise.code,
+                    NatureMarchandise=di.Marchandise.Nature
+
+                })
+
+                .ToListAsync();
+            return Ok(_mapper.Map<List<DemandeItemDto>>(allDemandsItem));
+                
+                
+                
         }
 
         // GET: api/DemandeItems/5
@@ -42,8 +70,9 @@ namespace Assurance_Backend.Controllers
             {
                 return NotFound();
             }
+            var demandeItemDto = _mapper.Map<DemandeItemDto>(demandeItem);
 
-            return demandeItem;
+            return Ok(demandeItemDto);
         }
 
         // PUT: api/DemandeItems/5

@@ -29,7 +29,22 @@ namespace Assurance_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PrivilaigeCompte>>> GetPrivilaigeComptes()
         {
-            var AllPrivilaigesComptes = await _context.PrivilaigeComptes.ToListAsync();
+            var AllPrivilaigesComptes = await _context.PrivilaigeComptes
+                .Include(pc=>pc.Privilaige)
+                .Include(pc=>pc.Compte)
+                .Select(pc=>new PrivilaigeCompteDto
+                {
+                    Id=pc.Id,
+                    PrivilaigeId=pc.PrivilaigeId,
+                    LibellePrivilaige=pc.Privilaige.Libelle,
+                    EtatPrivilaige=pc.Privilaige.Etat,
+                    CompteId=pc.CompteId,
+                    NumeroCompte=pc.Compte.Numero,
+                    EmailCompte=pc.Compte.Email,
+                    LoginCompte=pc.Compte.Login
+
+                })
+                .ToListAsync();
             return Ok(_mapper.Map<List<PrivilaigeCompteDto>>(AllPrivilaigesComptes)); 
             
         }
@@ -44,8 +59,8 @@ namespace Assurance_Backend.Controllers
             {
                 return NotFound();
             }
-
-            return privilaigeCompte;
+            var privilaigeCompteDto=_mapper.Map<PrivilaigeCompteDto>(privilaigeCompte);
+            return Ok(privilaigeCompteDto);
         }
 
         // PUT: api/PrivilaigeComptes/5

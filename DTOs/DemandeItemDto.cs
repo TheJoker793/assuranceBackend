@@ -15,6 +15,10 @@ namespace Assurance_Backend.DTOs
         public string Matricule { get; set; }
         public int IdZone { get; set; }
         public int BienId { get; set; }//ok
+        public string? CodeBien { get; set; }
+        public DateTime? DateAquisationBien { get; set; }
         public int MarchandseId { get; set; }//ok
+        public string? CodeMarchandise { get; set; }
+        public string? NatureMarchandise { get; set;}
     }
 }

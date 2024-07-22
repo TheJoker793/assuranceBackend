@@ -43,8 +43,8 @@ namespace Assurance_Backend.Controllers
             {
                 return NotFound();
             }
-
-            return article;
+            var articleDto=_mapper.Map<ArticleDto>(article);
+            return Ok(articleDto);
         }
 
         // PUT: api/Articles/5

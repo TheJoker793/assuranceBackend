@@ -29,7 +29,17 @@ namespace Assurance_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Marchandise>>> GetMarchandises()
         {
-            var AllMarchandise= await _context.Marchandises.ToListAsync();
+            var AllMarchandise= await _context.Marchandises
+                .Include(m=>m.TypeTransport)
+                .Select(m=>new MarchandiseDto
+                {
+                    Id=m.Id,
+                    code=m.code,
+                    Nature=m.Nature,
+                    TypeTransportId=m.TypeTransportId,
+                    LibelleTypeTransport=m.TypeTransport.Libelle
+                })
+                .ToListAsync();
             return Ok(_mapper.Map<List<MarchandiseDto>>(AllMarchandise));
         }
 

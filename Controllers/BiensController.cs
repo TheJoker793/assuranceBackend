@@ -57,8 +57,8 @@ namespace Assurance_Backend.Controllers
             {
                 return NotFound();
             }
-
-            return bien;
+            var bienDto = _mapper.Map<BienDto>(bien);
+            return Ok(bienDto);
         }
 
         // PUT: api/Biens/5

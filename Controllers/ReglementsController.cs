@@ -29,7 +29,31 @@ namespace Assurance_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Reglement>>> GetReglements()
         {
-            var AllReglements= await _context.Reglements.ToListAsync();
+            var AllReglements= await _context.Reglements
+                .Include(r=>r.CompteBancaire)
+                .Include(r=>r.Personne)
+                .Include(r=>r.Devis)
+                .Include(r=>r.Situation)
+                .Select(r=>new ReglementDto
+                {
+                    Id=r.Id,
+                    Numero=r.Numero,
+                    DateRemise=r.DateRemise,
+                    SituationId=r.SituationId,
+                    LibelleSituation=r.Situation.Libelle,
+                    CompteBancaireId=r.CompteBancaireId,
+                    LibelleCompteBancaire=r.CompteBancaire.Libelle,
+                    RibCompteBancaire=r.CompteBancaire.Rib,
+                    CleCompteBancaire=r.CompteBancaire.Cle,
+                    DevisId=r.DevisId,
+                    LibelleDevis=r.Devis.Libelle,
+                    PersonneId=r.PersonneId,
+                    CinPersonne=r.Personne.Cin,
+                    PrenomPersonne=r.Personne.Prenom,
+                    NomPersonne=r.Personne.Nom
+
+                })
+                .ToListAsync();
             return Ok(_mapper.Map<List<ReglementDto>>(AllReglements));
         }
 
@@ -43,8 +67,8 @@ namespace Assurance_Backend.Controllers
             {
                 return NotFound();
             }
-
-            return reglement;
+            var reglementDto = _mapper.Map<ReglementDto>(reglement);
+            return Ok(reglementDto);
         }
 
         // PUT: api/Reglements/5

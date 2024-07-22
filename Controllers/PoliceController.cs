@@ -29,7 +29,43 @@ namespace Assurance_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Police>>> GetPolices()
         {
-            var AllPolices= await _context.Polices.ToListAsync();
+            var AllPolices= await _context.Polices
+                .Include(p=>p.Personne)
+                .Include(p=>p.Assureur)
+                .Include(p=>p.Contrat)
+                .Include(p=>p.Marchandise)
+                .Include(p=>p.Article)
+                .Include(p=>p.TypeBien)
+                .Select(p=>new PoliceDto
+                {
+                    Id=p.Id,
+                    Code=p.Code,
+                    DateAjout=p.DateAjout,
+                    PersonneId=p.PersonneId,
+                    CinPersonne=p.Personne.Cin,
+                    PrenomPersonne=p.Personne.Prenom,
+                    NomPersonne=p.Personne.Prenom,
+                    DateNaissancePersonne=p.Personne.DateNaissance,
+                    AssureurId=p.AssureurId,
+                    DesignationAssureur=p.Assureur.Designation,
+                    AddressAssureur=p.Assureur.Address,
+                    ContratId=p.ContratId,
+                    DateEffet=p.Contrat.DateEffet,
+                    DateEcheance=p.Contrat.DateEcheance,
+                    DateSignature=p.Contrat.DateSignature,
+                    ExerciceContrat=p.Contrat.Exercice,
+                    MarchandiseId=p.MarchandiseId,
+                    CodeMarchandise=p.Marchandise.code,
+                    NatureMarchandise=p.Marchandise.Nature,
+                    TypeBienId=p.TypeBienId,
+                    LibelleTypeBien=p.TypeBien.Libelle,
+                    ArticleId=p.ArticleId,
+                    LibelleArticle=p.Article.Libelle,
+                    ReferenceArticle=p.Article.Reference,
+                    PrixArticle=p.Article.Prix
+                    
+                })
+                .ToListAsync();
             return Ok(_mapper.Map<List<PoliceDto>>(AllPolices));
         }
 
@@ -43,8 +79,8 @@ namespace Assurance_Backend.Controllers
             {
                 return NotFound();
             }
-
-            return police;
+            var policeDto = _mapper.Map<PoliceDto>(police);
+            return Ok(policeDto);
         }
 
         // PUT: api/Police/5

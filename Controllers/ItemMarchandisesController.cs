@@ -29,7 +29,18 @@ namespace Assurance_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ItemMarchandise>>> GetItemMarchandises()
         {
-            var AllItems= await _context.ItemMarchandises.ToListAsync();
+            var AllItems= await _context.ItemMarchandises
+                .Include(im=>im.Marchandise)
+                .Select(im=>new ItemMarchandiseDto
+                {
+                    Id=im.Id,
+                    Libelle=im.Libelle,
+                    MarchandiseId=im.MarchandiseId,
+                    CodeMarchandise=im.Marchandise.code,
+                    NatureMarchandise=im.Marchandise.Nature
+                })
+                .ToListAsync();
+                
             return Ok(_mapper.Map<List<ItemMarchandiseDto>>(AllItems));
         }
 
@@ -43,8 +54,9 @@ namespace Assurance_Backend.Controllers
             {
                 return NotFound();
             }
+            var ItemMarchandiseDto = _mapper.Map<ItemMarchandiseDto>(itemMarchandise);
 
-            return itemMarchandise;
+            return Ok(ItemMarchandiseDto);
         }
 
         // PUT: api/ItemMarchandises/5

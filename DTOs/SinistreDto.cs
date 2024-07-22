@@ -17,8 +17,17 @@ namespace Assurance_Backend.DTOs
         public string Lieux { get; set; }
         public string Objet { get; set; }
         public DateTime DateValidation { get; set; }
+        
         public int TypeSinistreId { get; set; }//ok
+        public string? LibelleTypeSinistre { get; set; } 
+        
         public int SituationId { get; set; }
+        public string? LibelleSituation {  get; set; }
+
         public int PersonneId { get; set; }
+        public string? CinPersonne {  get; set; }
+        public string? PrenomPersonne {  get; set; }
+        public string? NomPersonne { get; set; }
+        public DateTime? DateNaissancePersonne { get; set; }
     }
 }

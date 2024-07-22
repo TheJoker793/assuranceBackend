@@ -28,7 +28,19 @@ namespace Assurance_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PieceJointe>>> GetPieceJointes()
         {
-            var allPieces= await _context.PieceJointes.ToListAsync();
+            var allPieces= await _context.PieceJointes
+                .Include(pj=>pj.Sinistre)
+                .Select(pj => new PieceJointeDto
+                {
+                    Id=pj.Id,
+                    Name=pj.Name,
+                    Extension=pj.Extension,
+                    DateCreation=pj.DateCreation,
+                    SinistreId=pj.SinistreId,
+                    LibelleSinistre=pj.Sinistre.Libelle,
+                    ReferenceSinistre=pj.Sinistre.Reference
+                })
+                .ToListAsync();
             return Ok(_mapper.Map<List<PieceJointeDto>>(allPieces));
         }
 
@@ -42,8 +54,9 @@ namespace Assurance_Backend.Controllers
             {
                 return NotFound();
             }
+            var PieceJointeDto = _mapper.Map<PieceJointeDto>(pieceJointe);
 
-            return pieceJointe;
+            return Ok(PieceJointeDto);
         }
 
         // PUT: api/PieceJointes/5
