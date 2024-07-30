@@ -37,6 +37,7 @@ namespace Assurance_Backend
         public DbSet<TypeBien> TypeBiens { get; set; }
         public DbSet<TypeSinistre> TypeSinistres { get; set; }
         public DbSet<TypeTransport> TypeTransports { get; set; }
+        public DbSet<TypeReglement> TypeReglements {  get; set; }
 
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -176,9 +177,9 @@ namespace Assurance_Backend
                 .WithMany(r=>r.Reglements)
                 .HasForeignKey(cb=>cb.CompteBancaireId);
             modelBuilder.Entity<Reglement>()
-                .HasOne(d => d.Devis)
+                .HasOne(t => t.TypeReglement)
                 .WithMany(r => r.Reglements)
-                .HasForeignKey(d => d.DevisId);
+                .HasForeignKey(t => t.TypeReglementId);
             modelBuilder.Entity<Reglement>()
                 .HasOne(p => p.Personne)
                 .WithMany(r => r.Reglements)
@@ -196,14 +197,6 @@ namespace Assurance_Backend
                .HasOne(p=>p.Personne)
                .WithMany(s => s.Sinistres)
                .HasForeignKey(p=>p.PersonneId);
-           /* modelBuilder.Entity<Sinistre>()
-               .HasOne(str => str.Structure)
-               .WithMany(s => s.Sinistres)
-               .HasForeignKey(str => str.StructureId);
-               //.OnDelete(DeleteBehavior.NoAction); // Set ON DELETE NO ACTION
-            ;*/
-
-
             
             modelBuilder.Entity<SinistreItem>()
                .HasOne(sin => sin.SinistreItemNature)

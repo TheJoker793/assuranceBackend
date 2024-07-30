@@ -53,7 +53,24 @@ namespace Assurance_Backend.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Compte>> GetCompte(int id)
         {
-            var compte = await _context.Comptes.FindAsync(id);
+            var compte = await _context.Comptes
+                .Include(c=>c.Personne)
+                .Select(c=>new CompteDto
+                {
+                    Id=c.Id,
+                    Numero=c.Numero,
+                    Email=c.Email,
+                    Login=c.Login,
+                    Password=c.Password,
+                    PersonneId = c.PersonneId,
+                    CinPersonne=c.Personne.Cin,
+                    PrenomPersonne=c.Personne.Prenom,
+                    NomPersonne=c.Personne.Nom,
+                    DateNaissancePersonne=c.Personne.DateNaissance
+
+                })
+                .FirstOrDefaultAsync(c => c.Id == id);
+                
 
             if (compte == null)
             {

@@ -7,7 +7,6 @@
         public string Designation { get; set; }
         public ICollection<Personne>Personnes { get; set; }
         public ICollection<Bien> Biens { get; set; }
-        //public ICollection<Police> Polices { get; set; }
-        //public ICollection<Sinistre> Sinistres { get; set; }
+        
     }
 }

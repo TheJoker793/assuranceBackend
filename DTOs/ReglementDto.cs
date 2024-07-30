@@ -15,8 +15,8 @@ namespace Assurance_Backend.DTOs
         public string? RibCompteBancaire { get; set; }
         public string? CleCompteBancaire { get; set; }
 
-        public int DevisId { get; set; }
-        public string? LibelleDevis {  get; set; }
+        public int TypeReglementId { get; set; }
+        public string? LibelleTypeReglement { get; set; }
 
 
         public int PersonneId { get; set; }

@@ -32,7 +32,7 @@ namespace Assurance_Backend.Controllers
             var AllReglements= await _context.Reglements
                 .Include(r=>r.CompteBancaire)
                 .Include(r=>r.Personne)
-                .Include(r=>r.Devis)
+                .Include(r=>r.TypeReglement)
                 .Include(r=>r.Situation)
                 .Select(r=>new ReglementDto
                 {
@@ -45,8 +45,8 @@ namespace Assurance_Backend.Controllers
                     LibelleCompteBancaire=r.CompteBancaire.Libelle,
                     RibCompteBancaire=r.CompteBancaire.Rib,
                     CleCompteBancaire=r.CompteBancaire.Cle,
-                    DevisId=r.DevisId,
-                    LibelleDevis=r.Devis.Libelle,
+                    TypeReglementId=r.TypeReglementId,
+                    LibelleTypeReglement=r.TypeReglement.Libelle,
                     PersonneId=r.PersonneId,
                     CinPersonne=r.Personne.Cin,
                     PrenomPersonne=r.Personne.Prenom,
@@ -61,7 +61,30 @@ namespace Assurance_Backend.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Reglement>> GetReglement(int id)
         {
-            var reglement = await _context.Reglements.FindAsync(id);
+            var reglement = await _context.Reglements
+                .Include(r=>r.CompteBancaire)
+                .Include(r=>r.Situation)
+                .Include(r=>r.TypeReglement)
+                .Include(r=>r.Personne)
+                .Select(r=>new ReglementDto
+                {
+                    Id=r.Id,
+                    Numero=r.Numero,
+                    DateRemise=r.DateRemise,
+                    SituationId=r.SituationId,
+                    LibelleSituation=r.Situation.Libelle,
+                    CompteBancaireId=r.CompteBancaireId,
+                    LibelleCompteBancaire=r.CompteBancaire.Libelle,
+                    RibCompteBancaire=r.CompteBancaire.Rib,
+                    CleCompteBancaire=r.CompteBancaire.Cle,
+                    TypeReglementId=r.TypeReglement.Id,
+                    LibelleTypeReglement=r.TypeReglement.Libelle,
+                    PersonneId=r.PersonneId,
+                    CinPersonne=r.Personne.Cin,
+                    PrenomPersonne=r.Personne.Prenom,
+                    NomPersonne=r.Personne.Nom
+                })
+                .FirstOrDefaultAsync(r=>r.Id==id);
 
             if (reglement == null)
             {

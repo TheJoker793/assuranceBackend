@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ZeZrzLe13FRIGYZeWNkrnhV36iSiIt2GYgmJbgzlhbVoIsw3z6mxn/kGJHW+2nHS7jGWh7cenDXLA0T2BjqITg==",
+  "dgSpecHash": "QftmOv8Unriz5EDqRuu2h2azbSBISLJqsN0XkLm1EFrrXoJ8WGmY4m4oMOBidGZ67xxKD4MUVxMUX0GpFfVGAQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Salah\\Source\\Repos\\Assurance_Backend\\Assurance_Backend\\Assurance_Backend.csproj",
+  "projectFilePath": "C:\\Users\\Salah\\Source\\Repos\\Gestion assurance (angular+dotnet)\\Assurance_Backend\\Assurance_Backend\\Assurance_Backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Salah\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\Salah\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",

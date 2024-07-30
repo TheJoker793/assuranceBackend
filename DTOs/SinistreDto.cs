@@ -24,6 +24,8 @@ namespace Assurance_Backend.DTOs
         public int SituationId { get; set; }
         public string? LibelleSituation {  get; set; }
 
+       
+
         public int PersonneId { get; set; }
         public string? CinPersonne {  get; set; }
         public string? PrenomPersonne {  get; set; }

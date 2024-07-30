@@ -46,14 +46,31 @@ namespace Assurance_Backend.Controllers
                     DateAjoutQuittancePrime=c.QuittancePrime.DateAjout
                 })
                 .ToListAsync();
-            return Ok(_mapper.Map<List<CompteDto>>(AllContrats));
+            return Ok(_mapper.Map<List<ContratDto>>(AllContrats));
         }
 
         // GET: api/Contrats/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Contrat>> GetContrat(int id)
         {
-            var contrat = await _context.Contrats.FindAsync(id);
+            var contrat = await _context.Contrats
+                .Include(c=>c.NatureContrat)
+                .Include(c=>c.QuittancePrime)
+                .Select(c=>new ContratDto
+                {
+                    Id=c.Id,
+                    DateEffet=c.DateEffet,
+                    DateEcheance=c.DateEcheance,
+                    DateSignature=c.DateSignature,
+                    Exercice=c.Exercice,
+                    NatureContratId=c.NatureContratId,
+                    LibelleNatureContrat=c.NatureContrat.Libelle,
+                    QuittancePrimeId=c.QuittancePrimeId,
+                    LibelleQuittancePrime=c.QuittancePrime.Libelle,
+                    MontantQuittancePrime=c.QuittancePrime.Montant,
+                    DateAjoutQuittancePrime=c.QuittancePrime.DateAjout
+                })
+                .FirstOrDefaultAsync(c=>c.Id==id);
 
             if (contrat == null)
             {

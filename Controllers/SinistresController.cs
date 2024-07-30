@@ -51,7 +51,7 @@ namespace Assurance_Backend.Controllers
                     TypeSinistreId=s.TypeSinistreId,
                     LibelleTypeSinistre=s.TypeSinistre.Libelle,
                     SituationId=s.SituationId,
-                    LibelleSituation=s.Libelle,
+                    LibelleSituation=s.Situation.Libelle,                    
                     PersonneId=s.PersonneId,
                     CinPersonne=s.Personne.Cin,
                     PrenomPersonne=s.Personne.Prenom,
@@ -66,7 +66,38 @@ namespace Assurance_Backend.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Sinistre>> GetSinistre(int id)
         {
-            var sinistre = await _context.Sinistres.FindAsync(id);
+            var sinistre = await _context.Sinistres
+                .Include(s=>s.Personne)
+                .Include(s=>s.TypeSinistre)
+                .Include(s=>s.Situation)
+                .Include(s=>s.Personne)
+                .Select(s=>new SinistreDto
+                {
+                    Id=s.Id,
+                    Libelle=s.Libelle,
+                    Reference=s.Reference,
+                    Description=s.Description,
+                    MontantExpertise=s.MontantExpertise,
+                    MontantIndemniser=s.MontantIndemniser,
+                    DateSinistre=s.DateSinistre,
+                    DateAjout=s.DateAjout,
+                    DegatMateriel=s.DegatMateriel,
+                    Cause=s.Cause,
+                    Lieux=s.Lieux,
+                    Objet=s.Objet,
+                    DateValidation=s.DateValidation,
+                    TypeSinistreId=s.TypeSinistreId,
+                    LibelleTypeSinistre=s.TypeSinistre.Libelle,
+                    SituationId=s.SituationId,
+                    LibelleSituation=s.Situation.Libelle,
+                    PersonneId=s.PersonneId,
+                    CinPersonne=s.Personne.Cin,
+                    PrenomPersonne=s.Personne.Prenom,
+                    NomPersonne=s.Personne.Nom,
+                    DateNaissancePersonne=s.Personne.DateNaissance
+
+                })
+                .FirstOrDefaultAsync(s=>s.Id==id);
 
             if (sinistre == null)
             {

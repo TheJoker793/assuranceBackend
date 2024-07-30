@@ -21,6 +21,7 @@
         public Situation Situation { get; set; }
         public int PersonneId {  get; set; }
         public Personne Personne { get; set; }
+            
         public ICollection<DossierSinistre> DossiersSinistre { get; set; }
         public ICollection<PieceJointe> PiecesJointes { get; set; }
         //public ICollection<SinistreItem> SinistreItems { get; set; }

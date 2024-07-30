@@ -39,6 +39,7 @@ namespace Assurance_Backend
             CreateMap<TypeBien, TypeBienDto>().ReverseMap();
             CreateMap<TypeSinistre,TypeSinistreDto>().ReverseMap();
             CreateMap<TypeTransport, TypeTransportDto>().ReverseMap();
+            CreateMap<TypeReglement,TypeReglementDto>().ReverseMap();
 
 
 
